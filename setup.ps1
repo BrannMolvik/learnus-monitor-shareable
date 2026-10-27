@@ -106,6 +106,10 @@ if (($ConfigureIntegration -or ($NewConfig -and $InteractiveSetup)) -and $Config
 }
 Write-Host 'Setup preserved existing records. No account or vault is inherited from the developer.'
 if ($InteractiveSetup -and -not $SkipDiagnostics) {
+    $ShortcutChoice = Read-Host 'Add Desktop and Start menu shortcuts? [Y/n]'
+    if ($ShortcutChoice -in @('','y','yes')) {
+        & (Join-Path $PSScriptRoot 'install-shortcuts.ps1')
+    }
     if ((Read-Host 'Run a read-only LearnUs baseline now? Articles may become read. [y/N]') -eq 'y') {
         & (Join-Path $PSScriptRoot 'run-lightweight-monitor.ps1') -NoPopup
         if ($LASTEXITCODE -ne 0) { throw 'Baseline failed. No task was installed.' }
@@ -116,4 +120,4 @@ if ($InteractiveSetup -and -not $SkipDiagnostics) {
         }
     }
 }
-Write-Host 'On demand: .\run-lightweight-monitor.ps1. Optional integration changes: .\setup.ps1 -ConfigureIntegration'
+Write-Host 'On demand: use the LearnUs Monitor shortcut or .\run-lightweight-monitor.ps1. Optional integration changes: .\setup.ps1 -ConfigureIntegration'

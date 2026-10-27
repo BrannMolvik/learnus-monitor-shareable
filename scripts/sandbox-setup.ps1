@@ -21,6 +21,7 @@ function Read-Host {
         '^Optional handoff' { return 'none' }
         '^Your OWN Yonsei Portal login ID' { return 'synthetic-student' }
         '^Run a read-only LearnUs baseline' { return 'n' }
+        '^Add Desktop and Start menu shortcuts' { return 'n' }
         default { throw 'Unexpected prompt: sandbox will not approve other actions.' }
     }
 }

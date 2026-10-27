@@ -131,6 +131,26 @@ passed in 73 seconds using the reorganized setup and runner.
 This layout test did not access a real LearnUs account, download real course
 files, display the viewer GUI, alter a Scheduled Task or access a real vault.
 
+## Desktop launcher validation (2026-10-28)
+
+Interactive setup now offers current-user Desktop and Start-menu shortcuts.
+Existing installations can run `install-shortcuts.ps1`. The shortcut opens the
+viewer with `-ScanOnOpen`, reusing its normal Update workflow and local runner.
+Report reloads do not request another scan. First launch can start with no saved
+brief/history. Existing unrelated shortcuts are preserved rather than replaced.
+
+Local checks passed: 157 Node tests, nine Python mock-vault tests, PowerShell
+syntax checks and the source privacy gate. All six no-account browser scenarios
+passed in 75 seconds. Shortcut tests used a temporary installation with spaces
+in its path and verified repeat installation and refusal to overwrite a foreign
+shortcut. The sandbox declines real Desktop/Start-menu installation.
+
+A separate local synthetic GUI test started with empty data, invoked a mock runner
+exactly once, and reloaded a responsive report window; it accessed no LearnUs account
+or real vault. Owner-authorized testing of the actual Desktop shortcut also
+completed a normal private scan without invoking Codex. Runtime records remain
+outside the public repository. Independent student-account testing is still pending.
+
 ## Publication / adoption checklist
 
 - [x] New installations default to standalone; no LLM or Obsidian dependency.
