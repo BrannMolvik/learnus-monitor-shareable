@@ -36,6 +36,23 @@ release or a replacement for the existing personal installation.
   traversal and junction escapes. Download-manifest paths outside the selected
   cache are rejected; mandatory executable/script blocks cannot be disabled.
 
+## Repeatable offline browser smoke test
+
+Run `npm run test:sandbox` after `npm ci --ignore-scripts` on Windows with Chrome.
+The initial run completed in 46 seconds, passing all six scenarios: baseline,
+unchanged repeat, changed-data dry run, committed changes, failed course retrieval
+and rejected synthetic login. The actual setup, runner, scanner, browser DOM
+extraction, state/diff/report generation and notification generation are exercised.
+The viewer parser is checked; the GUI is not opened. Both individual submissions
+are found on page four; confirmed group evidence retains no-individual-flag metadata.
+
+The test uses temporary configuration, dummy DPAPI credentials and a new browser
+profile. Browser navigation is fulfilled by synthetic fixtures before networking;
+unmatched page requests and download API GETs are blocked. Downloading is disabled.
+Real LearnUs, real credentials, Second Brain and scheduled tasks are not accessed.
+This is isolation within the current Windows user, not a fresh Windows VM. Passing
+does not establish that actual Yonsei authentication or current course HTML works.
+
 ## Privacy boundary
 
 Only selected application source, synthetic fixtures and generic documentation were

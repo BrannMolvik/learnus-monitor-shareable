@@ -7,7 +7,8 @@
   "scripts": {
     "monitor:daily": "node learnus-monitor.mjs --mode daily",
     "monitor:full": "node learnus-monitor.mjs --mode full",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:sandbox": "node scripts/sandbox-test.mjs"
   },
   "dependencies": {
     "playwright-core": "1.64.0-alpha-1789764292000"

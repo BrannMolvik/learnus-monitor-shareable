@@ -14,6 +14,32 @@ are **not required**. An assistant can launch the same runner if you want one.
 
 ## First installation (Windows 11)
 
+### Try it without a LearnUs account
+
+With Windows, Google Chrome, Node.js 20+ and Git installed, clone this repository
+and run these commands from its folder:
+
+```powershell
+npm ci --ignore-scripts
+npm run test:sandbox
+```
+
+No setup or real credentials are required for this test. It runs the actual setup
+and PowerShell runner with a synthetic student, temporary encrypted credentials and
+a temporary Chrome profile. A test-only browser hook supplies every LMS/SSO page
+from fixtures and blocks unmatched page requests. It checks a two-course baseline,
+page-four board submissions, group evidence, notices/materials, notification data,
+unchanged and changed scans, dry-run state protection, and failure-state retention.
+
+Results and a sample brief/diff are written to ignored `artifacts/sandbox/`.
+Successful temporary account/profile data is removed; failed tests retain their
+temporary synthetic files for diagnosis. This is not a Windows VM or separate OS
+user. Node/Chrome are still local installations; the test does not validate real
+Yonsei login/MFA, actual course markup, file downloads, scheduled execution or the
+viewer GUI. No real LearnUs request, scheduled task, vault write or LLM is needed.
+
+### Set up your own real account
+
 Install Google Chrome, Node.js 20+ (22 recommended), and Git. Windows PowerShell
 5.1 is supported. This is a public class-demo/testing candidate, not a fully
 account-validated release. Clone the clean source:
