@@ -4,9 +4,11 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-const root = path.resolve(process.env.LEARNUS_SANDBOX_ROOT || '.');
+// Windows may name the same temporary directory with 8.3 and long paths.
+const root = await fs.realpath(path.resolve(process.env.LEARNUS_SANDBOX_ROOT || '.'));
+const temporary = await fs.realpath(os.tmpdir());
 const scenario = process.env.LEARNUS_SANDBOX_CASE;
-if (path.dirname(root) !== path.resolve(os.tmpdir()) || !path.basename(root).startsWith('learnus-sandbox-') || !['baseline', 'repeat', 'preview', 'changed', 'failure', 'rejected-login'].includes(scenario)) throw new Error('Refusing non-sandbox browser interception.');
+if (path.dirname(root) !== temporary || !path.basename(root).startsWith('learnus-sandbox-') || !['baseline', 'repeat', 'preview', 'changed', 'failure', 'rejected-login'].includes(scenario)) throw new Error('Refusing non-sandbox browser interception.');
 const changed = ['preview', 'changed'].includes(scenario);
 const origin = 'https://ys.learnus.org';
 const page = body => `<!doctype html><html><head><meta charset="utf-8"><title>Synthetic LearnUs fixture</title></head><body><main id="region-main">${body}</main></body></html>`;
@@ -14,7 +16,8 @@ const activity = (id, type, name) => `<li class="activity modtype_${type}" id="m
 const row = (board, id, title, author = 'Professor Example') => `<tr><td>${id}</td><td><a href="${origin}/mod/ubboard/article.php?id=${board}&bwid=${id}">${title}</a></td><td>${author}</td><td>2030-01-01</td><td>1</td></tr>`;
 const launch = chromium.launchPersistentContext.bind(chromium);
 chromium.launchPersistentContext = async (profile, options) => {
-  if (path.resolve(profile) !== path.join(root, 'data', 'browser-profile')) throw new Error('Refusing a non-sandbox Chrome profile.');
+  const canonicalProfile = path.join(await fs.realpath(path.dirname(profile)), path.basename(profile));
+  if (canonicalProfile !== path.join(root, 'data', 'browser-profile')) throw new Error('Refusing a non-sandbox Chrome profile.');
   const context = await launch(profile, { ...options, serviceWorkers: 'block', args: [...(options.args || []), '--disable-background-networking', '--no-proxy-server', '--host-resolver-rules=MAP * ~NOTFOUND'] });
   let authenticated = false;
   const traffic = { scenario, mocked_requests: [], blocked_requests: [], login_submissions: 0, real_lms_requests: 0 };
