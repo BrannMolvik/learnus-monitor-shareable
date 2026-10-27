@@ -37,6 +37,8 @@ temporary synthetic files for diagnosis. This is not a Windows VM or separate OS
 user. Node/Chrome are still local installations; the test does not validate real
 Yonsei login/MFA, actual course markup, file downloads, scheduled execution or the
 viewer GUI. No real LearnUs request, scheduled task, vault write or LLM is needed.
+The test uses the shipping navigation timeouts and includes a slow synthetic login;
+allow roughly two minutes, including the intentionally rejected-login timeout.
 
 ### Set up your own real account
 

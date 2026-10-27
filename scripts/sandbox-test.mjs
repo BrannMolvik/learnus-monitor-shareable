@@ -32,7 +32,6 @@ try {
   config.student.searchTerms = ['Example Student', 'Example', 'Student'];
   config.student.groupAliases = [{ course: 'Example Media', title: 'Class Group Blue' }];
   config.downloads.enabled = false;
-  config.timeouts = { actionMs: 2000, navigationMs: 3000 };
   await fs.writeFile(configFile, JSON.stringify(config));
   const statePath = path.join(root, 'data/state.json');
   async function scan(scenario, dryRun = false) {
@@ -48,14 +47,15 @@ try {
       throw new Error(`Browser did not record fixture traffic: ${status.error || error.message}\n${log.slice(-6000)}`);
     });
     assert.equal(traffic.real_lms_requests, 0); assert.deepEqual(traffic.blocked_requests, []);
-    assert.equal(traffic.login_submissions, 1);
     if (!['failure', 'rejected-login'].includes(scenario)) {
-      assert.equal(result.code, 0, JSON.stringify(status) + result.text);
+      const log = result.code === 0 ? '' : await fs.readFile(status.log_file, 'utf8').catch(() => 'No scanner log was written.');
+      assert.equal(result.code, 0, JSON.stringify(status) + result.text + log);
       assert.equal(status.assignment_notification_error, null);
       assert.equal(status.second_brain_capture_error, null);
       assert.equal(status.second_brain_capture_succeeded, false);
     }
     else { assert.notEqual(result.code, 0); assert.equal(status.succeeded, false); }
+    assert.equal(traffic.login_submissions, 1, 'The synthetic login form must actually be submitted.');
     assert.equal(status.codex_invoked, false);
     results.push({ scenario, passed: true, runtime_ms: Date.now() - start, mocked_page_requests: traffic.mocked_requests.length, scan_succeeded: status.scan_succeeded });
     return { state: await json(statePath), diff: await json(path.join(root, 'data/reports/latest-diff.json')), status };

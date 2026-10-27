@@ -29,6 +29,8 @@ chromium.launchPersistentContext = async (profile, options) => {
     traffic.mocked_requests.push({ host: url.hostname, path: url.pathname, page: url.searchParams.get('page'), board: url.searchParams.get('id'), method });
     let body;
     if (url.hostname === 'infra.yonsei.ac.kr' && url.pathname === '/sso/login') {
+      // Exercise cold-login latency without replacing the shipping timeouts.
+      if (scenario === 'baseline' && method === 'GET') await new Promise(resolve => setTimeout(resolve, 3500));
       if (method === 'POST') {
         traffic.login_submissions++;
         const form = new URLSearchParams(request.postData());
