@@ -38,7 +38,8 @@ test('desktop startup scans once and report reload does not request another scan
 });
 
 test('shortcut installer is portable, idempotent and preserves unrelated shortcuts', { skip: process.platform !== 'win32' }, async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'learnus-shortcut-'));
+  const tempRoot = await fs.realpath(os.tmpdir());
+  const root = await fs.mkdtemp(path.join(tempRoot, 'learnus-shortcut-'));
   try {
     const install = path.join(root, 'Install With Spaces'), output = path.join(root, 'Shortcuts');
     await fs.mkdir(install);
@@ -55,7 +56,7 @@ test('shortcut installer is portable, idempotent and preserves unrelated shortcu
     assert.equal(inspect.status, 0, inspect.stderr);
     const shortcut = JSON.parse(inspect.stdout);
     assert.match(shortcut.Target, /WindowsPowerShell\\v1\.0\\powershell\.exe$/i);
-    assert.ok(shortcut.Arguments.includes(`-File "${path.join(install, 'show-daily-brief.ps1')}" -ScanOnOpen`));
+    assert.equal(shortcut.Arguments, `-NoProfile -STA -WindowStyle Hidden -ExecutionPolicy Bypass -File "${path.join(install, 'show-daily-brief.ps1')}" -ScanOnOpen`);
     assert.equal(shortcut.WorkingDirectory, install);
     assert.doesNotMatch(shortcut.Arguments, /password|username|codex exec/i);
     const replace = run(`$shell=New-Object -ComObject WScript.Shell; $link=$shell.CreateShortcut('${quote(link)}'); $link.TargetPath=$env:ComSpec; $link.Arguments=''; $link.Save()`);
@@ -65,7 +66,7 @@ test('shortcut installer is portable, idempotent and preserves unrelated shortcu
     assert.match(refused.stderr, /Existing shortcut points elsewhere/);
     assert.deepEqual(await fs.readFile(link), before);
   } finally {
-    assert.equal(path.dirname(root), path.resolve(os.tmpdir()));
+    assert.equal(path.dirname(root), tempRoot);
     await fs.rm(root, { recursive: true, force: true });
   }
 });
