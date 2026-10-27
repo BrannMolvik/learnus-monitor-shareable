@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { announcementBodyHash, mergeAnnouncementHistory, shouldReuseAnnouncementSummary } from '../announcement-history.mjs';
+import { announcementBodyHash, mergeAnnouncementHistory, shouldReuseAnnouncementSummary } from '../src/announcement-history.mjs';
 
 test('announcement body hash changes when saved body changes', () => {
   const base = {

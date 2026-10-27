@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 $Root = [IO.Path]::GetFullPath($Root)
 if ((Split-Path -Parent $Root).TrimEnd('\') -ne ([IO.Path]::GetTempPath()).TrimEnd('\') -or (Split-Path -Leaf $Root) -notlike 'learnus-sandbox-*') { throw 'An isolated temporary sandbox is required.' }
 if ($ParseBrief) {
-    . (Join-Path $Root 'viewer-parse.ps1')
+    . (Join-Path $Root 'src\viewer-parse.ps1')
     $brief = Get-Content -LiteralPath (Join-Path $Root 'data\reports\latest-brief.md') -Raw -Encoding UTF8
     $parts = Get-BriefParts (ConvertFrom-BriefMarkdown $brief).Sections
     if ($parts.Tasks.Count -lt 1 -or -not $parts.HealthOk) { throw 'Viewer could not parse the generated brief.' }

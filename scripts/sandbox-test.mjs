@@ -23,7 +23,7 @@ async function powershell(args, extraEnv = {}) {
 let passed = false;
 const results = [];
 try {
-  for (const name of ['learnus-monitor.mjs', 'monitor-runtime.mjs', 'app-config.mjs', 'announcement-history.mjs', 'course-downloads.mjs', 'local-paths.mjs', 'doctor.mjs', 'setup.ps1', 'monitor.config.example.json', 'run-lightweight-monitor.ps1', 'assignment-notifications.mjs', 'run-handoff.mjs', 'second-brain-export.mjs', 'viewer-parse.ps1']) await fs.copyFile(path.join(source, name), path.join(root, name));
+  for (const name of ['src', 'setup.ps1', 'monitor.config.example.json', 'run-lightweight-monitor.ps1']) await fs.cp(path.join(source, name), path.join(root, name), { recursive: true });
   await fs.symlink(path.join(source, 'node_modules'), path.join(root, 'node_modules'), 'junction');
   const setup = await powershell(['-File', path.join(source, 'scripts/sandbox-setup.ps1'), '-Root', root]);
   assert.equal(setup.code, 0, setup.text);

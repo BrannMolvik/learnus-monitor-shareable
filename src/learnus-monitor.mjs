@@ -158,7 +158,7 @@ export async function persistSuccessfulScanAndDownload({ root, state, diff, repo
 }
 
 export async function runMonitor() {
-const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
+const APP_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CONFIG_PATH = path.join(APP_ROOT, 'monitor.config.json');
 const app = await loadAppConfig(CONFIG_PATH);
 const ROOT = app.dataDirectory;

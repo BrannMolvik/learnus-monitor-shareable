@@ -28,7 +28,7 @@ try {
     try { $HasLock = $Mutex.WaitOne(0) } catch [Threading.AbandonedMutexException] { $HasLock = $true }
     if (-not $HasLock) { throw 'Another scan is already running for this data directory.' }
     $NodePath = (Get-Command node.exe -ErrorAction Stop).Source
-    & $NodePath (Join-Path $ProjectPath 'doctor.mjs') --config $ConfigPath --skip-auth | Set-Content -LiteralPath $LogPath -Encoding UTF8
+    & $NodePath (Join-Path $ProjectPath 'src\doctor.mjs') --config $ConfigPath --skip-auth | Set-Content -LiteralPath $LogPath -Encoding UTF8
     if ($LASTEXITCODE -ne 0) { throw 'Configuration/dependency diagnostic failed; run setup.ps1.' }
     $Before = if (Test-Path -LiteralPath $StatePath) { (Get-Item -LiteralPath $StatePath).LastWriteTimeUtc } else { $null }
     $SecurePassword = (Get-Content -LiteralPath (Join-Path $AuthPath 'password.dpapi') -Raw).Trim() | ConvertTo-SecureString
@@ -42,7 +42,7 @@ try {
         $env:LEARNUS_DOCUMENTS = [Environment]::GetFolderPath('MyDocuments')
         $env:LEARNUS_RUNNER_TIMEOUT_MINUTES = [string]$TimeoutMinutes
         $env:LEARNUS_RUN_DEADLINE_MS = [string]([DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() + $TimeoutMinutes * 60000)
-        $Arguments = '"{0}" --mode {1}' -f (Join-Path $ProjectPath 'learnus-monitor.mjs'), $Mode
+        $Arguments = '"{0}" --mode {1}' -f (Join-Path $ProjectPath 'src\learnus-monitor.mjs'), $Mode
         if ($DryRun) { $Arguments += ' --dry-run' }
         $Info = New-Object Diagnostics.ProcessStartInfo
         $Info.FileName = $NodePath; $Info.Arguments = $Arguments; $Info.WorkingDirectory = $ProjectPath
@@ -82,7 +82,7 @@ try {
     $Status.scan_succeeded = $true; $Status.succeeded = $true
     if (-not $DryRun -and $Config.secondBrain.mode -and $Config.secondBrain.mode -ne 'none') {
         try {
-            & $NodePath (Join-Path $ProjectPath 'run-handoff.mjs') $ConfigPath 2>&1 | Add-Content -LiteralPath $LogPath -Encoding UTF8
+            & $NodePath (Join-Path $ProjectPath 'src\run-handoff.mjs') $ConfigPath 2>&1 | Add-Content -LiteralPath $LogPath -Encoding UTF8
             if ($LASTEXITCODE -ne 0) { throw 'Optional handoff failed; scan remains successful.' }
             $Status.second_brain_capture_succeeded = $true
         } catch { $Status.second_brain_capture_error = $_.Exception.Message }
@@ -91,7 +91,7 @@ try {
         try {
             $Payload = Join-Path $DataPath 'reports\latest-assignment-notification.json'
             $NotifyState = Join-Path $LogsPath 'assignment-notification-state.json'
-            & $NodePath (Join-Path $ProjectPath 'assignment-notifications.mjs') --scan $ScanPath --state $NotifyState --out $Payload | Add-Content -LiteralPath $LogPath -Encoding UTF8
+            & $NodePath (Join-Path $ProjectPath 'src\assignment-notifications.mjs') --scan $ScanPath --state $NotifyState --out $Payload | Add-Content -LiteralPath $LogPath -Encoding UTF8
             if ($LASTEXITCODE -ne 0) { throw 'Notification generation failed.' }
             $Notification = Get-Content -LiteralPath $Payload -Raw -Encoding UTF8 | ConvertFrom-Json
             if (-not $NoPopup -and $Config.notifications.popup -and $Notification.should_notify) {

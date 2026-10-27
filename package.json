@@ -5,8 +5,8 @@
   "type": "module",
   "description": "Deterministic, read-only Yonsei LearnUs monitor",
   "scripts": {
-    "monitor:daily": "node learnus-monitor.mjs --mode daily",
-    "monitor:full": "node learnus-monitor.mjs --mode full",
+    "monitor:daily": "node src/learnus-monitor.mjs --mode daily",
+    "monitor:full": "node src/learnus-monitor.mjs --mode full",
     "test": "node --test test/*.test.mjs",
     "test:sandbox": "node scripts/sandbox-test.mjs"
   },

@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import vm from 'node:vm';
-import { normalizeName, isStudentAuthor } from '../monitor-runtime.mjs';
+import { normalizeName, isStudentAuthor } from '../src/monitor-runtime.mjs';
 
-const source = await fs.readFile(new URL('../learnus-monitor.mjs', import.meta.url), 'utf8');
+const source = await fs.readFile(new URL('../src/learnus-monitor.mjs', import.meta.url), 'utf8');
 function declaration(name) {
   const start = source.search(new RegExp(`(?:async )?function ${name}\\(`));
   assert.ok(start >= 0);

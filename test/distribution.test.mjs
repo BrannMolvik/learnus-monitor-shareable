@@ -6,13 +6,13 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { appConfig, notePath } from '../app-config.mjs';
-import { validateConfig, isValidAnnouncementBody, isAnnouncementArticleUrl } from '../monitor-runtime.mjs';
-import { buildCaptureBatch, loadCourseRoutes } from '../second-brain-export.mjs';
-import { markdownExport, runHandoff } from '../run-handoff.mjs';
-import { assertLocalTarget } from '../local-paths.mjs';
-import { writeNew } from '../course-downloads.mjs';
-import { diagnose } from '../doctor.mjs';
+import { appConfig, notePath } from '../src/app-config.mjs';
+import { validateConfig, isValidAnnouncementBody, isAnnouncementArticleUrl } from '../src/monitor-runtime.mjs';
+import { buildCaptureBatch, loadCourseRoutes } from '../src/second-brain-export.mjs';
+import { markdownExport, runHandoff } from '../src/run-handoff.mjs';
+import { assertLocalTarget } from '../src/local-paths.mjs';
+import { writeNew } from '../src/course-downloads.mjs';
+import { diagnose } from '../src/doctor.mjs';
 import { inspectSource } from '../scripts/check-distribution.mjs';
 
 test('distribution gate rejects private filenames and synthetic secrets without printing matched values', () => {
@@ -26,6 +26,14 @@ test('distribution gate rejects private filenames and synthetic secrets without 
 });
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+test('tidy layout keeps launchers at root and runtime helpers under src', async () => {
+  for (const file of ['setup.ps1', 'run-lightweight-monitor.ps1', 'show-daily-brief.ps1',
+    'src/learnus-monitor.mjs', 'src/doctor.mjs', 'src/viewer-parse.ps1',
+    'src/second-brain-writer.py', 'docs/VALIDATION.md']) await fs.access(path.join(root, file));
+  const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8'));
+  assert.equal(pkg.scripts['monitor:daily'], 'node src/learnus-monitor.mjs --mode daily');
+  assert.equal(pkg.scripts['monitor:full'], 'node src/learnus-monitor.mjs --mode full');
+});
 const config = () => ({ schemaVersion: 1, baseUrl: 'https://ys.learnus.org/', timezone: 'Asia/Seoul', dataDirectory: 'data', authDirectory: 'auth', profileDirectory: 'browser-profile', student: { displayName: 'Example Student', authorNames: ['Example Student'], searchTerms: ['Example Student', 'Example', 'Student'] }, timeouts: { actionMs: 1000, navigationMs: 1000 } });
 const scan = () => ({ last_successful_check: '2026-10-01T08:00:00+09:00', check_status: { all_active_courses_checked: true }, assignments: [{ id: 100, course: 'Example Course', course_id: 1, name: 'Example exercise', outstanding: true, completed: false, submission_status: 'No attempt' }], required_activities: [], announcements: [], course_materials: [] });
 const diff = { current_successful_check: '2026-10-01T08:00:00+09:00', meaningful_changes: [], completed_since_last_check: [] };
@@ -64,7 +72,7 @@ test('summary flags have consistent safe defaults and reject nonlocal enabled en
   assert.equal(disabled.announcementSummaries.enabled, false);
   disabled.announcementSummaries.enabled = true;
   assert.throws(() => validateConfig(disabled, '.'), /local HTTP/);
-  const code = fs.readFile(new URL('../learnus-monitor.mjs', import.meta.url), 'utf8');
+  const code = fs.readFile(new URL('../src/learnus-monitor.mjs', import.meta.url), 'utf8');
   return code.then(value => assert.equal((value.match(/redirect: 'error'/g) || []).length, 2));
 });
 
@@ -127,7 +135,7 @@ test('article redirects and navigation fallback are not source content', () => {
 });
 
 test('guided setup is idempotent, accepts a separate data path, and refuses legacy config without modifying it', { skip: process.platform !== 'win32' }, () => temporary(async dir => {
-  for (const name of ['setup.ps1', 'monitor.config.example.json', 'app-config.mjs', 'monitor-runtime.mjs']) await fs.copyFile(path.join(root, name), path.join(dir, name));
+  for (const name of ['setup.ps1', 'monitor.config.example.json', 'src']) await fs.cp(path.join(root, name), path.join(dir, name), { recursive: true });
   const env = { ...process.env }; for (const key of Object.keys(env)) if (key.toUpperCase() === 'PSMODULEPATH') delete env[key];
   const args = ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', path.join(dir, 'setup.ps1'), '-StudentName', 'Example Student', '-DataDirectory', path.join(dir, 'Other Data'), '-SkipCredentials', '-SkipDiagnostics'];
   for (let i = 0; i < 2; i++) { const result = spawnSync('powershell.exe', args, { env, encoding: 'utf8', timeout: 30000 }); assert.equal(result.status, 0, result.stdout + result.stderr); }
@@ -143,7 +151,9 @@ test('guided setup is idempotent, accepts a separate data path, and refuses lega
 
 test('runner clears credentials before optional handoff and notification code; scheduler requires consent', async () => {
   const runner = await fs.readFile(path.join(root, 'run-lightweight-monitor.ps1'), 'utf8');
-  assert.ok(runner.indexOf('Remove-Item Env:\\LEARNUS_PASSWORD') < runner.indexOf("'run-handoff.mjs'"));
+  const cleared = runner.indexOf('Remove-Item Env:\\LEARNUS_PASSWORD');
+  const handoff = runner.indexOf("'src\\run-handoff.mjs'");
+  assert.ok(cleared >= 0 && handoff > cleared);
   assert.match(runner, /secondBrain\.mode -ne 'none'/);
   const scheduler = await fs.readFile(path.join(root, 'install-scheduled-task.ps1'), 'utf8');
   assert.ok(scheduler.indexOf('if (-not $Approve)') < scheduler.indexOf('Get-ScheduledTask'));
