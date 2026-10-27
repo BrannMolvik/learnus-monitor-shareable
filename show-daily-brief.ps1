@@ -4,7 +4,8 @@ param(
     [string]$HistoryPath,
     [string]$StatePath,
     [string]$RunnerPath,
-    [string]$RunStatusPath
+    [string]$RunStatusPath,
+    [switch]$ScanOnOpen
 )
 $ScriptRoot = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
 $DataRoot = Join-Path $ScriptRoot 'data'
@@ -26,7 +27,7 @@ $ErrorActionPreference = 'Stop'
 
 $HasBrief = Test-Path -LiteralPath $BriefPath
 $HasHistory = Test-Path -LiteralPath $HistoryPath
-if (-not $HasBrief -and -not $HasHistory) {
+if (-not $HasBrief -and -not $HasHistory -and -not $ScanOnOpen) {
     exit 0
 }
 
@@ -3327,6 +3328,12 @@ $Window.Add_ContentRendered({
         catch { }
 
         $null = $Window.Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::ApplicationIdle, [Action] { try { Initialize-ProbeRunspace } catch { } })
+
+        # Only the desktop launch requests a scan; reloading the report must not start another.
+        if ($script:ScanOnOpen) {
+            $script:ScanOnOpen = $false
+            Start-UpdateScan
+        }
 
         # Bring the window forward initially, then stop forcing it above other apps.
         $Timer = New-Object System.Windows.Threading.DispatcherTimer

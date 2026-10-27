@@ -81,12 +81,25 @@ folder's NTFS ACL to your Windows user. It preserves existing settings on repeat
 runs. Use `setup.ps1 -UpdateCredentials` only when you intend to replace credentials.
 No developer account, Chrome session or vault access comes with cloning the source.
 
-Setup performs a local diagnostic and offers an explicitly approved baseline and
+Setup performs a local diagnostic and offers Desktop/Start-menu shortcuts, a baseline and
 daily schedule. It does not install a task automatically. A first real scan needs
 your own account. A controlled owner-account live check has passed; that does not
 guarantee every student's login/MFA flow. See [validation notes](docs/VALIDATION.md) for exact coverage.
 
 ## Daily use
+
+Double-click **LearnUs Monitor** on your Desktop or find it in the Windows Start
+menu. The app opens the saved report, starts a daily scan and reloads when done.
+The Update button shows progress and lets you check again. No Codex is involved.
+If another scan is running, the app waits for its result instead.
+
+Existing installations can add the shortcuts with:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install-shortcuts.ps1
+```
+
+To open only the saved report without scanning, run `.\show-daily-brief.ps1`.
 
 ```powershell
 .\run-lightweight-monitor.ps1
