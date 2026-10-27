@@ -37,12 +37,16 @@ try {
   const statePath = path.join(root, 'data/state.json');
   async function scan(scenario, dryRun = false) {
     const start = Date.now();
+    console.log(`Sandbox scenario: ${scenario}`);
     const result = await powershell(['-File', path.join(root, 'run-lightweight-monitor.ps1'), '-NoPopup', ...(dryRun ? ['-DryRun'] : [])], {
       NODE_OPTIONS: `--import=${pathToFileURL(path.join(source, 'scripts/sandbox-browser.mjs')).href}`,
       LEARNUS_SANDBOX_ROOT: root, LEARNUS_SANDBOX_CASE: scenario,
     });
     const status = await json(path.join(root, 'data/logs/lightweight-last-run-status.json'));
-    const traffic = await json(path.join(root, `traffic-${scenario}.json`));
+    const traffic = await json(path.join(root, `traffic-${scenario}.json`)).catch(async error => {
+      const log = await fs.readFile(status.log_file, 'utf8').catch(() => 'No scanner log was written.');
+      throw new Error(`Browser did not record fixture traffic: ${status.error || error.message}\n${log.slice(-6000)}`);
+    });
     assert.equal(traffic.real_lms_requests, 0); assert.deepEqual(traffic.blocked_requests, []);
     assert.equal(traffic.login_submissions, 1);
     if (!['failure', 'rejected-login'].includes(scenario)) {
