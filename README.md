@@ -5,6 +5,10 @@ own account, checks courses and submission states, tracks deadlines and notices,
 archives announcements, saves course files and shows a daily brief. It is not an
 official Yonsei service and never submits work or marks activities complete.
 
+This clean repository is intended for an AI-class demonstration and independent
+student setup. Show source code and synthetic test results in class, not private
+course records, credentials, browser sessions or downloaded teaching materials.
+
 Normal monitoring is deterministic. Codex, Claude, an API key, Ollama and Obsidian
 are **not required**. An assistant can launch the same runner if you want one.
 
@@ -22,7 +26,7 @@ cd learnus-monitor-shareable
 In the extracted/cloned source folder:
 
 ```powershell
-npm ci
+npm ci --ignore-scripts
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 

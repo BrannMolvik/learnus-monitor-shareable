@@ -19,6 +19,14 @@ release or a replacement for the existing personal installation.
 - Setup was exercised with a synthetic student, separate storage and no credentials.
   Repeated setup preserves configuration; unsupported old configuration is refused
   without replacement. Disabled handoff touches no vault or MCP project.
+- A subsequent fresh GitHub clone exercised the actual guided setup script with
+  synthetic prompt answers, including its credential-storage branch. CurrentUser
+  DPAPI encryption/decryption, owner-only protected auth-folder ACLs, custom storage,
+  standalone diagnostics, unchanged credentials/configuration on repeat setup, and
+  preservation after an empty-login update were verified. No real credentials,
+  LearnUs requests, browser profile, vault or scheduled task were used. This tests
+  setup, not whether Yonsei accepts a real account's login or current MFA flow.
+- All 151 Node and nine Python tests passed again on that GitHub checkout.
 - A fresh export of the staged source was tested in an isolated temporary folder,
   without inherited dependencies, credentials or runtime records. The diagnostic
   correctly rejected the missing dependency; after `npm ci --ignore-scripts`, its
