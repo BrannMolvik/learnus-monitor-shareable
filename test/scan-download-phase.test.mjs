@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { pathToFileURL } from 'node:url';
 import { calculateDownloadBudgetMs, compactDownloadSummary, downloadBriefSection,
-  replaceDownloadBriefSection, persistSuccessfulScanAndDownload, isMainModule } from '../learnus-monitor.mjs';
+  replaceDownloadBriefSection, persistSuccessfulScanAndDownload, isMainModule } from '../src/learnus-monitor.mjs';
 
 const stateFixture = () => ({ last_successful_check: '2026-10-08T08:00:00+09:00',
   scanner: { implementation: 'fixture' }, check_status: { all_active_courses_checked: true },
@@ -107,7 +107,7 @@ test('throwing downloader preserves successful scan and reports reason, message 
 test('abrupt child exit during downloader leaves successful scan, diff, report and pending brief committed', async (t) => {
   const options = await fixture(t);
   const childPath = path.join(options.root, 'crash-fixture.mjs');
-  const moduleUrl = pathToFileURL(path.resolve('learnus-monitor.mjs')).href;
+  const moduleUrl = pathToFileURL(path.resolve('src/learnus-monitor.mjs')).href;
   await fs.writeFile(childPath, `import {persistSuccessfulScanAndDownload} from ${JSON.stringify(moduleUrl)};
 await persistSuccessfulScanAndDownload({
   ...${JSON.stringify({ root: options.root, state: options.state, diff: options.diff, report: options.report, brief: options.brief, stamp: options.stamp, config: options.config, env: {} })},

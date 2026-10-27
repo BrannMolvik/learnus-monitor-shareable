@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-SPEC = importlib.util.spec_from_file_location('writer', Path(__file__).resolve().parent.parent / 'second-brain-writer.py')
+SPEC = importlib.util.spec_from_file_location('writer', Path(__file__).resolve().parent.parent / 'src' / 'second-brain-writer.py')
 writer = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(writer)
 

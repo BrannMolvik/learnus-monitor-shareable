@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import { sanitizeName, downloadPath, validateDownload, safeLearnUsUrl, syncCourseDownloads, linkShortcut, linksIndex, resolveDownloadRoot, filenameFor, writeNew, writeMotw, isPathInDownloadRoot, errorReason, DRY_RUN_MESSAGE, lockHeld, acquireLock, releaseLock } from '../course-downloads.mjs';
-import { DEFAULT_DENY_EXTENSIONS, normalizeDenyExtensions, validateConfig } from '../monitor-runtime.mjs';
+import { sanitizeName, downloadPath, validateDownload, safeLearnUsUrl, syncCourseDownloads, linkShortcut, linksIndex, resolveDownloadRoot, filenameFor, writeNew, writeMotw, isPathInDownloadRoot, errorReason, DRY_RUN_MESSAGE, lockHeld, acquireLock, releaseLock } from '../src/course-downloads.mjs';
+import { DEFAULT_DENY_EXTENSIONS, normalizeDenyExtensions, validateConfig } from '../src/monitor-runtime.mjs';
 
 const source = 'https://ys.learnus.org/pluginfile.php/42/mod_folder/content/notes.pdf';
 const item = { course_id: 1, course: '한국어: 자료', title: 'Intro', section: 'Week 1', category: 'material', source_url: source };

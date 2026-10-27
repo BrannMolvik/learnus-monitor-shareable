@@ -116,6 +116,21 @@ owner-specific findings; never merge its old history into the clean repository.
 - Automated privacy checks and hosted Windows CI do not replace source/license
   review or constitute independent security certification.
 
+## Layout cleanup validation (2026-10-28)
+
+Internal runtime modules and viewer parsing now live in `src/`; detailed notes
+live in `docs/`. Setup, daily/full runners and the viewer launcher remain at the
+repository root. Private configuration/data paths and scheduled entry points are
+unchanged. The root contains 14 tracked files, down from 29.
+
+Local checks passed: 155 Node tests, nine Python mock-vault tests, Windows
+PowerShell syntax checks for root/source/test-helper scripts, and the source
+privacy gate (44 tracked files, no findings). All six no-account browser scenarios
+passed in 73 seconds using the reorganized setup and runner.
+
+This layout test did not access a real LearnUs account, download real course
+files, display the viewer GUI, alter a Scheduled Task or access a real vault.
+
 ## Publication / adoption checklist
 
 - [x] New installations default to standalone; no LLM or Obsidian dependency.

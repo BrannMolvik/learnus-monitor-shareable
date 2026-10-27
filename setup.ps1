@@ -27,7 +27,7 @@ if ($NewConfig) {
     $Config.dataDirectory = $DataDirectory
 } else {
     $Config = Get-Content -LiteralPath $ConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
-    if ($Config.schemaVersion -ne 1) { throw 'Existing configuration is not this distribution format; preserved. See MIGRATION.md.' }
+    if ($Config.schemaVersion -ne 1) { throw 'Existing configuration is not this distribution format; preserved. See docs/MIGRATION.md.' }
     Write-Host 'Keeping existing configuration and student identity.'
 }
 if ($ConfigureIntegration -or ($NewConfig -and $InteractiveSetup)) {
@@ -68,7 +68,7 @@ if ($NewConfig -or $ConfigureIntegration) {
         $Validation = @'
 const { loadAppConfig } = await import(process.argv[1]); const { validateConfig } = await import(process.argv[2]); const c = await loadAppConfig(process.argv[3]); validateConfig(c,c.dataDirectory);
 '@
-        & node.exe --input-type=module -e $Validation ([Uri](Join-Path $PSScriptRoot 'app-config.mjs')).AbsoluteUri ([Uri](Join-Path $PSScriptRoot 'monitor-runtime.mjs')).AbsoluteUri $NextPath
+        & node.exe --input-type=module -e $Validation ([Uri](Join-Path $PSScriptRoot 'src\app-config.mjs')).AbsoluteUri ([Uri](Join-Path $PSScriptRoot 'src\monitor-runtime.mjs')).AbsoluteUri $NextPath
         if ($LASTEXITCODE -ne 0) { throw 'Configuration validation failed; existing configuration preserved.' }
         Move-Item -LiteralPath $NextPath -Destination $ConfigPath -Force
     } finally { if (Test-Path -LiteralPath $NextPath) { Remove-Item -LiteralPath $NextPath -Force } }
@@ -95,13 +95,13 @@ if (-not $SkipCredentials -and ($UpdateCredentials -or -not (Test-Path -LiteralP
     Write-Host 'Saved CurrentUser DPAPI credentials in the selected private auth directory.'
 }
 if (-not $SkipDiagnostics) {
-    $DiagnosticArgs = @((Join-Path $PSScriptRoot 'doctor.mjs'),'--config',$ConfigPath)
+    $DiagnosticArgs = @((Join-Path $PSScriptRoot 'src\doctor.mjs'),'--config',$ConfigPath)
     if ($SkipCredentials) { $DiagnosticArgs += '--skip-auth' }
     & node.exe @DiagnosticArgs
     if ($LASTEXITCODE -ne 0) { throw 'Diagnostic failed. No task was installed.' }
 }
 if (($ConfigureIntegration -or ($NewConfig -and $InteractiveSetup)) -and $Config.secondBrain.mode -eq 'obsidian') {
-    & uv.exe run --project $Config.secondBrain.projectDirectory python (Join-Path $PSScriptRoot 'second-brain-writer.py') --config $ConfigPath --setup --approve-paths
+    & uv.exe run --project $Config.secondBrain.projectDirectory python (Join-Path $PSScriptRoot 'src\second-brain-writer.py') --config $ConfigPath --setup --approve-paths
     if ($LASTEXITCODE -ne 0) { throw 'Obsidian setup failed; monitoring can still run with mode none.' }
 }
 Write-Host 'Setup preserved existing records. No account or vault is inherited from the developer.'

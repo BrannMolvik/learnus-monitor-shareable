@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {
   buildAssignmentNotification,
   isDefinitelyUnsubmitted,
-} from '../assignment-notifications.mjs';
+} from '../src/assignment-notifications.mjs';
 
 function baseScan() {
   return {

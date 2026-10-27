@@ -21,7 +21,7 @@ jobs:
       - shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($script in Get-ChildItem -Filter *.ps1) {
+          foreach ($script in Get-ChildItem -Path '*.ps1','src/*.ps1','scripts/*.ps1') {
             $tokens = $null; $issues = $null
             [System.Management.Automation.Language.Parser]::ParseFile($script.FullName,[ref]$tokens,[ref]$issues) | Out-Null
             if ($issues.Count) { throw "$($script.Name) failed Windows PowerShell parsing" }

@@ -23,6 +23,6 @@ export async function diagnose(file, { skipAuth = false } = {}) {
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const i = process.argv.indexOf('--config');
-  diagnose(i < 0 ? path.join(path.dirname(fileURLToPath(import.meta.url)), 'monitor.config.json') : process.argv[i + 1], { skipAuth: process.argv.includes('--skip-auth') })
+  diagnose(i < 0 ? path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'monitor.config.json') : process.argv[i + 1], { skipAuth: process.argv.includes('--skip-auth') })
     .then(r => console.log(JSON.stringify(r))).catch(e => { console.error(e.message); process.exitCode = 1; });
 }

@@ -44,7 +44,7 @@ $IconFont = 'Segoe Fluent Icons, Segoe MDL2 Assets'
 $Invariant = [Globalization.CultureInfo]::InvariantCulture
 $script:SessionStart = Get-Date
 # Parsing, Due-list building and state merging live in viewer-parse.ps1 (shared with the tests).
-. (Join-Path $ScriptRoot 'viewer-parse.ps1')
+. (Join-Path $ScriptRoot 'src\viewer-parse.ps1')
 
 # This distribution never imports another installation's display state.
 

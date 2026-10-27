@@ -12,6 +12,17 @@ course records, credentials, browser sessions or downloaded teaching materials.
 Normal monitoring is deterministic. Codex, Claude, an API key, Ollama and Obsidian
 are **not required**. An assistant can launch the same runner if you want one.
 
+## Repository layout
+
+- `setup.ps1`, `run-lightweight-monitor.ps1`, `show-daily-brief.ps1`: setup, scan and open the app.
+- `src/`: scanner, downloads, viewer helpers and optional integrations.
+- `scripts/`: development and sandbox checks.
+- `test/`: automated regression tests.
+- `docs/`: validation, migration and source-provenance notes.
+
+Private settings remain in ignored `monitor.config.json`; runtime records stay in
+the configured data directory. Moving source files does not move your private data.
+
 ## First installation (Windows 11)
 
 ### Try it without a LearnUs account
@@ -73,7 +84,7 @@ No developer account, Chrome session or vault access comes with cloning the sour
 Setup performs a local diagnostic and offers an explicitly approved baseline and
 daily schedule. It does not install a task automatically. A first real scan needs
 your own account. A controlled owner-account live check has passed; that does not
-guarantee every student's login/MFA flow. See VALIDATION.md for exact coverage.
+guarantee every student's login/MFA flow. See [validation notes](docs/VALIDATION.md) for exact coverage.
 
 ## Daily use
 
@@ -82,7 +93,7 @@ guarantee every student's login/MFA flow. See VALIDATION.md for exact coverage.
 .\run-lightweight-monitor.ps1 -NoPopup
 .\run-full-audit.ps1
 .\show-daily-brief.ps1
-node .\doctor.mjs
+node .\src\doctor.mjs
 ```
 
 `doctor` checks local configuration/dependencies/credential-file presence, not
@@ -192,5 +203,5 @@ saved as HTTP(S) shortcuts, not fetched by the downloader.
 - Uninstall: remove the owned task, back up data, then remove your own source/data
   through Explorer. Never delete another installation's profile or a vault.
 
-See [MIGRATION.md](MIGRATION.md) before moving an existing personal installation and
-[VALIDATION.md](VALIDATION.md) for tests, remaining limits and publication gates.
+See [migration notes](docs/MIGRATION.md) before moving an existing personal installation and
+[validation notes](docs/VALIDATION.md) for tests, remaining limits and publication gates.

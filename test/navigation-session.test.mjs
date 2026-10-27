@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import vm from 'node:vm';
-import { isSessionLossUrl, isYonseiSsoUrl, isLoggedOut, assertAuthenticatedPage, isAnnouncementArticleUrl, isValidAnnouncementBody } from '../monitor-runtime.mjs';
+import { isSessionLossUrl, isYonseiSsoUrl, isLoggedOut, assertAuthenticatedPage, isAnnouncementArticleUrl, isValidAnnouncementBody } from '../src/monitor-runtime.mjs';
 
 // Main has installation-specific top-level reads. Load only its function
 // declarations so these fixtures cannot start Chrome or access private data.
-const source = await fs.readFile(new URL('../learnus-monitor.mjs', import.meta.url), 'utf8');
+const source = await fs.readFile(new URL('../src/learnus-monitor.mjs', import.meta.url), 'utf8');
 function declaration(name) {
   const start = source.search(new RegExp(`(?:async )?function ${name}\\(`));
   assert.ok(start >= 0, `missing ${name}`);

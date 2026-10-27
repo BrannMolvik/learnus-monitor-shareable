@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const parser = path.join(root, 'viewer-parse.ps1');
+const parser = path.join(root, 'src/viewer-parse.ps1');
 const windows = process.platform === 'win32';
 const D = ' \u2014 ';
 const KO_COURSE = '\uD55C\uAD6D\uC5B4 (1)';

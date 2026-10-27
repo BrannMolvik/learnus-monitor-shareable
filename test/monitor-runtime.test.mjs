@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { readJson, emptyState, validateConfig, isStudentAuthor, baselineComparison, courseNameFromRaw,
-  resolveDocumentsDirectory, resolveDownloadRoot, waitForLearnUsLanding } from '../monitor-runtime.mjs';
+  resolveDocumentsDirectory, resolveDownloadRoot, waitForLearnUsLanding } from '../src/monitor-runtime.mjs';
 
 test('landing readiness waits for visible course or login controls within the configured timeout', async () => {
   const calls = [];
