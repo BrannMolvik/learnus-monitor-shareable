@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "dataDirectory": "data",
+  "authDirectory": "auth",
+  "baseUrl": "https://ys.learnus.org/",
+  "timezone": "Asia/Seoul",
+  "profileDirectory": "browser-profile",
+  "chromeChannel": "chrome",
+  "student": {"displayName": "YOUR NAME", "authorNames": ["YOUR NAME"], "searchTerms": ["YOUR NAME"], "groupAliases": []},
+  "excludedCourses": [],
+  "timeouts": {"actionMs": 15000, "navigationMs": 30000},
+  "downloads": {"enabled": true, "root": "downloads", "maxFileMB": 100, "maxFilesPerRun": 40, "budgetMinutes": 2, "skipExtensions": [".mp4", ".mkv", ".mov"]},
+  "translation": {"enabled": false},
+  "announcementSummaries": {"enabled": false},
+  "notifications": {"enabled": true, "popup": true},
+  "secondBrain": {"mode": "none", "directory": "exports", "projectDirectory": "", "vaultDirectory": "", "intakeNote": "AI Inbox/LearnUs Intake.md", "courses": []}
+}

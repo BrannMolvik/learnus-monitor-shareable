@@ -1,0 +1,43 @@
+node_modules/
+.env
+.env.*
+!.env.example
+monitor.config.json
+data/
+auth/
+browser-profile/
+profiles/
+reports/
+logs/
+backups/
+downloads/
+state.json*
+announcement-history.json*
+downloads-manifest.json*
+second-brain-course-map.json
+*.dpapi
+*.log
+*.jsonl
+*.next
+*.tmp
+*.bak
+*.db
+*.sqlite*
+__pycache__/
+*.pyc
+.playwright-mcp/
+artifacts/
+screenshots/
+*.zip
+*.pdf
+*.docx
+*.pptx
+*.xlsx
+*.mp3
+*.mp4
+username.txt
+Cookies*
+Login Data*
+Local State
+History*
+Web Data*

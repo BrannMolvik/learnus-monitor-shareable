@@ -1,0 +1,15 @@
+{
+  "name": "learnus-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic, read-only Yonsei LearnUs monitor",
+  "scripts": {
+    "monitor:daily": "node learnus-monitor.mjs --mode daily",
+    "monitor:full": "node learnus-monitor.mjs --mode full",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "1.64.0-alpha-1789764292000"
+  }
+}
