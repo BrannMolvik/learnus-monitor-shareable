@@ -79,7 +79,8 @@ owner-specific findings; never merge its old history into the clean repository.
 - [ ] Validate any selected real MCP integration in an isolated test vault.
 - [ ] Test the selected Windows schedule and GUI on the intended user's PC.
 - [ ] Review attribution and obtain applicable redistribution/license permission.
-- [ ] Obtain explicit owner approval before adding a remote, publishing or releasing.
+- [x] Owner approved a separate private GitHub repository for test sharing.
+- [ ] Obtain explicit owner approval before making it public or publishing a release.
 
 Until the unchecked items are resolved, describe this as a locally tested sharing
 candidate, not a fully account-validated release. No publishing approval is implied.

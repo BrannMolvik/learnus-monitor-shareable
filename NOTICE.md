@@ -9,7 +9,8 @@ submission-evidence tests or personal course-note map are included. Tests create
 synthetic records in temporary directories; the owner-specific audit remains in
 the original private repository, not in this distribution history.
 
-No new remote, release, public visibility or redistribution license is established
-by this preparation. The owner must review source attribution/license permission,
-privacy checks and clean-account validation before approving publication. A code
+The owner has approved sharing this clean source through a separate private GitHub
+repository for testing. This does not establish a public release or redistribution
+license. Review source attribution/license permission, privacy checks and
+clean-account validation before approving public publication. A code
 license cannot grant rights to school content, branding or other people's data.
