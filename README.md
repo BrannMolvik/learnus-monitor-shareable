@@ -72,7 +72,8 @@ No developer account, Chrome session or vault access comes with cloning the sour
 
 Setup performs a local diagnostic and offers an explicitly approved baseline and
 daily schedule. It does not install a task automatically. A first real scan needs
-your own account; no authenticated scan was performed while preparing this copy.
+your own account. A controlled owner-account live check has passed; that does not
+guarantee every student's login/MFA flow. See VALIDATION.md for exact coverage.
 
 ## Daily use
 

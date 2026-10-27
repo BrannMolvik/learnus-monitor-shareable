@@ -53,6 +53,28 @@ Real LearnUs, real credentials, Second Brain and scheduled tasks are not accesse
 This is isolation within the current Windows user, not a fresh Windows VM. Passing
 does not establish that actual Yonsei authentication or current course HTML works.
 
+## Authorized live follow-up (2026-10-28)
+
+The owner explicitly authorized testing with the existing locally protected
+credentials. A separate ignored private installation reused the configured Chrome
+profile and local runner; automatic SSO and a complete followed-course retrieval
+were verified. Canonical baseline and reports were saved only in that private test
+directory, not in this public source repository. The original personal state,
+announcement history, configuration and Windows task were verified unchanged.
+An immediate repeat retrieval produced zero meaningful changes and zero new
+completions; the initial private baseline did not classify existing items as new.
+
+The live trial identified and regression-tested delayed login/dashboard rendering,
+explicitly empty boards without page totals, and dated Zoom links that are not new
+assignments. Existing tracked assignments remain preserved. Unknown board pagination
+still fails conservatively. An inaccessible announcement body remains explicitly
+reported; the scanner does not bypass access controls or archive navigation as text.
+
+Downloads, AI processing, notifications and Second Brain handoff were disabled for
+the live test. No real account details, submission evidence, logs, state or course
+content are included in this repository. This verifies one existing owner account,
+not a new student's first-time login, MFA or a full personal-installation migration.
+
 ## Privacy boundary
 
 Only selected application source, synthetic fixtures and generic documentation were
@@ -76,9 +98,9 @@ owner-specific findings; never merge its old history into the clean repository.
 
 ## Not verified / known limits
 
-- No authenticated LearnUs production scan or fresh-user account test was run.
-  Login/MFA behavior, current LMS markup and course coverage require account-owner
-  validation. Board pages without interpretable pagination fail conservatively.
+- The authorized owner-account test above passed, but a new student's first-time
+  login/MFA and course coverage still require that student's validation. Board
+  pages without interpretable pagination or explicit empty evidence fail safely.
 - No real Obsidian vault or actual MCP append was used. Python tests mock MCP calls;
   a real compatible MCP/CLI installation still needs its own isolated-vault test.
 - No scheduled task was created, removed, triggered or rescheduled, and the new
@@ -91,8 +113,8 @@ owner-specific findings; never merge its old history into the clean repository.
 - Course downloads and announcement text are untrusted external content. Download
   marking is best-effort; documents may contain malicious macros. Path checks do
   not defend against every concurrent hostile local filesystem change.
-- Automated privacy checks do not replace source/license review. No cloud CI run
-  or independent security certification is claimed.
+- Automated privacy checks and hosted Windows CI do not replace source/license
+  review or constitute independent security certification.
 
 ## Publication / adoption checklist
 
@@ -100,6 +122,7 @@ owner-specific findings; never merge its old history into the clean repository.
 - [x] Personal settings and generated files excluded from tracked source.
 - [x] Narrow optional export permissions and stable capture identities tested.
 - [x] Existing personal installation left separate; reversible migration documented.
+- [x] Explicitly authorized owner-account live retrieval in separate private storage.
 - [ ] Validate a new student's own login, complete baseline and subsequent diff.
 - [ ] Validate any selected real MCP integration in an isolated test vault.
 - [ ] Test the selected Windows schedule and GUI on the intended user's PC.
