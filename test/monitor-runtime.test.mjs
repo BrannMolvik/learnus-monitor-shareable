@@ -4,7 +4,15 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { readJson, emptyState, validateConfig, isStudentAuthor, baselineComparison, courseNameFromRaw,
-  resolveDocumentsDirectory, resolveDownloadRoot } from '../monitor-runtime.mjs';
+  resolveDocumentsDirectory, resolveDownloadRoot, waitForLearnUsLanding } from '../monitor-runtime.mjs';
+
+test('landing readiness waits for visible course or login controls within the configured timeout', async () => {
+  const calls = [];
+  const locator = { or: other => { assert.equal(other, 'portal'); return locator; }, filter: options => { assert.equal(options.visible, true); return locator; }, first: () => locator,
+    waitFor: async options => { calls.push(options); await Promise.resolve(); } };
+  await waitForLearnUsLanding({ locator: selector => { assert.match(selector, /course-link/); return locator; }, getByText: (text, options) => { assert.equal(text, 'Portal Login'); assert.equal(options.exact, true); return 'portal'; } }, 30000);
+  assert.deepEqual(calls, [{ state: 'visible', timeout: 30000 }]);
+});
 
 const config = () => ({
   baseUrl: 'https://ys.learnus.org/', timezone: 'Asia/Seoul', profileDirectory: 'browser-profile',

@@ -60,6 +60,12 @@ export async function isLoggedOut(page) {
   return page.getByText('Portal Login', { exact: true }).isVisible().catch(() => false);
 }
 
+export async function waitForLearnUsLanding(page, timeout) {
+  await page.locator('.course-box a.course-link[href*="/course/view.php"]')
+    .or(page.getByText('Portal Login', { exact: true })).filter({ visible: true })
+    .first().waitFor({ state: 'visible', timeout });
+}
+
 export async function assertAuthenticatedPage(page) {
   if (await isLoggedOut(page)) {
     const error = new Error('redirected to Yonsei login');
