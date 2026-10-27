@@ -13,7 +13,7 @@ SPEC.loader.exec_module(writer)
 class IsolatedWriterTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='learnus-vault-fixture-')
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.vault = self.root / 'Test Vault'
         self.vault.mkdir()
         self.config_file = self.root / 'monitor.config.json'
