@@ -18,15 +18,17 @@ function harness() {
   const errors = [];
   const metrics = { courses_checked: 0, announcement_articles_checked: 0, announcement_articles_failed: 0, announcement_bodies_captured: 0, material_pages_checked: 0, files_listed: 0 };
   const counts = [];
+  const landingWaits = [];
   const sandbox = {
     config: { timeouts: { navigationMs: 1000 } }, errors, metrics,
     countPage: kind => counts.push(kind), assertAuthenticatedPage, isLoggedOut, isYonseiSsoUrl, isAnnouncementArticleUrl, isValidAnnouncementBody, URL,
     process: { env: { LEARNUS_USERNAME: 'fixture-user', LEARNUS_PASSWORD: 'fixture-password' } },
     normalizeAnnouncementBody: value => String(value || '').trim(), FOLDER_TREE_WAIT_MS: 1500,
+    waitForLearnUsLanding: async (_page, timeout) => landingWaits.push(timeout),
   };
   vm.createContext(sandbox);
   vm.runInContext(['goto', 'authenticate', 'scanCourseHome', 'scanAnnouncementArticle', 'listedAgain', 'scanFolder'].map(declaration).join('\n'), sandbox);
-  return { ...sandbox, counts };
+  return { ...sandbox, counts, landingWaits };
 }
 function fakePage(url, { visible = false, navigationError = null, status = 200 } = {}) {
   return {
@@ -152,6 +154,7 @@ test('authentication may visit login and SSO before accepting the completed sess
   };
   await h.authenticate(page);
   assert.equal(current, 'https://ys.learnus.org/');
+  assert.equal(h.landingWaits.length, 2);
 });
 
 test('authentication rejects local login even when Portal Login is not visible', async () => {

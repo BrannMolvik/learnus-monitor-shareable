@@ -9,6 +9,7 @@ import { readJson, emptyState, validateConfig, isStudentAuthor, baselineComparis
 import { syncCourseDownloads, errorReason } from './course-downloads.mjs';
 import { loadAppConfig } from './app-config.mjs';
 import { isAnnouncementArticleUrl, isValidAnnouncementBody } from './monitor-runtime.mjs';
+import { waitForLearnUsLanding } from './monitor-runtime.mjs';
 
 const PROCESS_STARTED_AT_MS = Date.now() - process.uptime() * 1000;
 
@@ -467,6 +468,8 @@ async function authenticate(page) {
     timeout: config.timeouts.navigationMs
   });
 
+  await waitForLearnUsLanding(page, config.timeouts.navigationMs);
+
   const portalLogin = page.getByText('Portal Login', { exact: true });
 
   if (await portalLogin.isVisible().catch(() => false)) {
@@ -528,6 +531,8 @@ async function authenticate(page) {
     });
   }
 
+  // DOMContentLoaded may precede the actual login/dashboard controls.
+  await waitForLearnUsLanding(page, config.timeouts.navigationMs);
   // If Portal Login is still visible, LearnUs did not accept the session.
   const stillLoggedOut = await isLoggedOut(page);
 
@@ -538,6 +543,8 @@ async function authenticate(page) {
 
 async function scanDashboard(page) {
   await goto(page, config.baseUrl, 'dashboard');
+  await waitForLearnUsLanding(page, config.timeouts.navigationMs);
+  await assertAuthenticatedPage(page);
   return page.evaluate(() => {
     const tidy = (value) => (value || '').replace(/\s+/g, ' ').trim();
     return [...document.querySelectorAll('.course-box')].map((box) => {
@@ -614,9 +621,8 @@ async function parseBoardPage(page) {
     const tidy = (value) => (value || '').replace(/\s+/g, ' ').trim();
     const body = tidy(document.body.innerText);
     const pagination = body.match(/Total Page\s*:\s*\d+\s*\/\s*(\d+)/i);
-    if (!pagination) throw new Error('Board pagination could not be verified. Submission status is unresolved.');
-    const totalPages = Math.max(1, Number(pagination[1]));
-    const totalCount = Number(body.match(/Total Count\s*:\s*(\d+)/i)?.[1] || 0);
+    const count = body.match(/Total Count\s*:\s*(\d+)/i);
+    const totalCount = Number(count?.[1] || 0);
     const rows = [...document.querySelectorAll('tr')].map((row) => {
       const cells = [...row.querySelectorAll('td')].map((cell) => tidy(cell.textContent));
       const link = row.querySelector('a[href*="/mod/ubboard/article.php"]');
@@ -636,6 +642,9 @@ async function parseBoardPage(page) {
         entry_id: Number(new URL(link.href).searchParams.get('bwid')),
       };
     }).filter(Boolean);
+    const explicitlyEmpty = count && totalCount === 0 && rows.length === 0 && /No registered post\./i.test(body);
+    if (!pagination && !explicitlyEmpty) throw new Error('Board pagination could not be verified. Submission status is unresolved.');
+    const totalPages = pagination ? Math.max(1, Number(pagination[1])) : 1;
     return { totalPages, totalCount, rows };
   });
 }

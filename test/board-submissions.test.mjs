@@ -12,6 +12,21 @@ function declaration(name) {
   return source.slice(start, start + 1 + next);
 }
 const course = { id: 1, name: 'Example Course' };
+
+test('only an explicitly empty board may omit page totals', async () => {
+  for (const [body, expected] of [
+    ['Total Count : 0 No registered post.', 1],
+    ['Total Count : 0', null],
+    ['Total Count : 1 No registered post.', null],
+    ['No registered post.', null],
+    ['Total Count : 5 Total Page : 1 / 3', 3],
+  ]) {
+    const parse = vm.runInNewContext(`(${declaration('parseBoardPage')})`, { document: { body: { innerText: body }, querySelectorAll: () => [] } });
+    const page = { evaluate: fn => fn() };
+    if (expected === null) await assert.rejects(parse(page), /pagination/);
+    else assert.equal((await parse(page)).totalPages, expected);
+  }
+});
 const activity = { id: 2, name: 'Example board assignment', url: 'https://ys.learnus.org/mod/ubboard/view.php?id=2' };
 function harness(own = true, alias = false) {
   const visited = [];

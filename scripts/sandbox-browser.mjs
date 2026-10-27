@@ -46,10 +46,11 @@ chromium.launchPersistentContext = async (profile, options) => {
       else if (url.pathname === '/') body = [1, 2].map(id => `<div class="course-box"><a class="course-link" href="${origin}/course/view.php?id=${id}">${id === 1 ? 'Example Media' : 'Example Language'}</a></div>`).join('');
       else if (url.pathname === '/course/view.php') {
         if (scenario === 'failure' && id === 2) return route.fulfill({ status: 503, body: page('Synthetic course failure') });
-        body = `<ul><li class="section"><h3 class="sectionname">Week 1</h3><ul>${id === 1 ? activity(10, 'assign', 'Written exercise') + activity(11, 'ubboard', 'Assignment response') + activity(12, 'ubboard', 'Assignment reaction') + activity(13, 'ubboard', 'Group Project') : activity(20, 'folder', 'Lecture files') + activity(21, 'ubboard', 'Announcements') + activity(22, 'resource', 'Reading link')}</ul></li></ul>`;
+        body = `<ul><li class="section"><h3 class="sectionname">Week 1</h3><ul>${id === 1 ? activity(10, 'assign', 'Written exercise') + activity(11, 'ubboard', 'Assignment response') + activity(12, 'ubboard', 'Assignment reaction') + activity(13, 'ubboard', 'Group Project') + activity(14, 'ubboard', 'Empty class files') : activity(20, 'folder', 'Lecture files') + activity(21, 'ubboard', 'Announcements') + activity(22, 'resource', 'Reading link')}</ul></li></ul>`;
       } else if (url.pathname === '/mod/assign/view.php') body = `<table><tr><th>Submission status</th><td>${changed ? 'Submitted for grading' : 'Not yet submitted'}</td></tr><tr><th>Due date</th><td>2030-12-01 23:59</td></tr></table>`;
       else if (url.pathname === '/mod/folder/view.php') body = `<a href="${origin}/pluginfile.php/1/mod_folder/content/0/lecture.pdf">lecture.pdf</a>${changed ? `<a href="${origin}/pluginfile.php/1/mod_folder/content/0/new-reading.pdf">new-reading.pdf</a>` : ''}`;
       else if (url.pathname === '/mod/ubboard/view.php') {
+        if (id === 14) return route.fulfill({ status: 200, contentType: 'text/html', body: page('Total Count : 0 <table><tr><td>No registered post.</td></tr></table>') });
         const search = url.searchParams.has('keyfield'), current = Number(url.searchParams.get('page') || 1);
         const pages = id === 21 ? 1 : search ? 2 : 4;
         let rows = '';
@@ -59,7 +60,11 @@ chromium.launchPersistentContext = async (profile, options) => {
       } else if (url.pathname === '/mod/ubboard/article.php' && id === 21) body = `<h1>Class announcement</h1><div class="article-content">${url.searchParams.get('bwid') === '102' ? 'New synthetic assignment deadline: 2030-12-02 23:59.' : changed ? 'The original synthetic course notice has been updated with an extra reading.' : 'Welcome to the synthetic course. Please read the course instructions carefully.'}</div>`;
     }
     if (body === undefined) { traffic.blocked_requests.push({ host: url.hostname, path: url.pathname, method }); return route.abort('blockedbyclient'); }
-    return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: page(body) });
+    // A landing page may render login/course controls after DOMContentLoaded.
+    const rendered = scenario === 'baseline' && url.origin === origin && url.pathname === '/'
+      ? page(`<script>setTimeout(() => { document.querySelector('main').innerHTML = ${JSON.stringify(body)}; }, 350);</script>`)
+      : page(body);
+    return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: rendered });
   });
   const close = context.close.bind(context);
   context.close = async (...args) => {
