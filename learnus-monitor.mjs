@@ -866,6 +866,7 @@ async function scanFolder(page, activity) {
 
 function boardLooksLikeAssignment(activity) {
   if (previousAssignment(`board-${activity.id}`)) return true;
+  if (/\bzoom\s+link\b/i.test(activity.name) && !/\b(assign(?:ment)?|project|respond\s+by|due)\b/i.test(activity.name)) return false;
   return /\b(assign(?:ment)?|project|respond\s+by|due(?:\s+date)?)\b|\b\d{1,2}\/\d{1,2}\b/i.test(activity.name);
 }
 

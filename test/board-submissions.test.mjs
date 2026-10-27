@@ -13,6 +13,16 @@ function declaration(name) {
 }
 const course = { id: 1, name: 'Example Course' };
 
+test('a dated Zoom link is not new assignment evidence; explicit tasks and prior work remain tracked', () => {
+  const context = { previousAssignment: () => null };
+  const classify = vm.runInNewContext(`(${declaration('boardLooksLikeAssignment')})`, context);
+  assert.equal(classify({ id: 1, name: 'ZOOM LINK FOR 11/02 CLASS' }), false);
+  assert.equal(classify({ id: 1, name: 'Assignment: present using this Zoom link 11/02' }), true);
+  assert.equal(classify({ id: 1, name: 'Reading response 11/02' }), true);
+  context.previousAssignment = () => ({ outstanding: true });
+  assert.equal(classify({ id: 1, name: 'ZOOM LINK FOR 11/02 CLASS' }), true);
+});
+
 test('only an explicitly empty board may omit page totals', async () => {
   for (const [body, expected] of [
     ['Total Count : 0 No registered post.', 1],
