@@ -9,8 +9,8 @@ submission-evidence tests or personal course-note map are included. Tests create
 synthetic records in temporary directories; the owner-specific audit remains in
 the original private repository, not in this distribution history.
 
-The owner has approved sharing this clean source through a separate private GitHub
-repository for testing. This does not establish a public release or redistribution
-license. Review source attribution/license permission, privacy checks and
-clean-account validation before approving public publication. A code
-license cannot grant rights to school content, branding or other people's data.
+The owner has approved public visibility of this separate clean source repository
+for an AI-class demonstration and testing. This is not a validated production
+release and does not add a redistribution license. Attribution/license review and
+clean-account validation remain outstanding. Public source visibility cannot grant
+rights to school content, branding or other people's data.

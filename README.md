@@ -15,8 +15,8 @@ are **not required**. An assistant can launch the same runner if you want one.
 ## First installation (Windows 11)
 
 Install Google Chrome, Node.js 20+ (22 recommended), and Git. Windows PowerShell
-5.1 is supported. This is a private testing candidate, not a fully account-validated
-release. Accept the repository invitation first, then clone the clean source:
+5.1 is supported. This is a public class-demo/testing candidate, not a fully
+account-validated release. Clone the clean source:
 
 ```powershell
 git clone https://github.com/BrannMolvik/learnus-monitor-shareable.git
