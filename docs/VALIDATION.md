@@ -146,6 +146,7 @@ files, display the viewer GUI, alter a Scheduled Task or access a real vault.
 - [x] Owner subsequently approved public source visibility for an AI-class demo.
 - [ ] Complete remaining validation and obtain approval before a formal release.
 
-Until the unchecked items are resolved, describe this as a locally tested class-demo
-candidate, not a fully account-validated release. Public source availability does
-not mean the remaining tests or licensing review have been completed.
+Tested with the developer's account; independent student setup testing is still
+pending. Until the unchecked items are resolved, this remains a class-demo/testing
+candidate. Public source availability does not mean the remaining tests or
+licensing review have been completed.
